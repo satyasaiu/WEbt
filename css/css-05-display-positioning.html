@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Experiment 05: Display & Positioning | Yogendra</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .position-stage {
+      height: 260px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      position: relative;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+    .pos-box {
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../index.html" class="nav-brand">
+      <div class="brand-icon">🎨</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html" class="nav-link">Home</a></li>
+      <li><a href="../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="index.html" class="nav-link active">CSS Programs</a></li>
+      <li><a href="../javascript/index.html" class="nav-link">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../index.html">Home</a>
+        <span>/</span>
+        <a href="index.html">CSS Programs</a>
+        <span>/</span>
+        <span>Experiment 05</span>
+      </div>
+      <div class="meta-pill">Experiment 05 • Layout Mechanics</div>
+      <h1 class="program-title">Display & Positioning Modes</h1>
+      <p class="program-desc">
+        Interactive demonstration comparing normal document flow against CSS positioning paradigms: static, relative, absolute, fixed, and sticky, along with display properties (block, inline, inline-block).
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box">
+        <div style="margin-bottom: 1.25rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button onclick="setPosMode('static')" class="glass-btn glass-btn-sm">static (Default Flow)</button>
+          <button onclick="setPosMode('relative')" class="glass-btn glass-btn-sm">relative (Offset from Flow)</button>
+          <button onclick="setPosMode('absolute')" class="glass-btn glass-btn-primary glass-btn-sm">absolute (Relative to Container)</button>
+          <button onclick="setPosMode('sticky')" class="glass-btn glass-btn-accent glass-btn-sm">sticky (Scroll-Pinned)</button>
+        </div>
+
+        <div class="position-stage" id="scrollStage">
+          <!-- Sibling items to show normal flow -->
+          <div class="pos-box" style="background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); margin-bottom: 0.75rem;">
+            Document Flow Node A (Static Sibling)
+          </div>
+
+          <!-- Dynamic Target Box -->
+          <div id="targetBox" class="pos-box" style="background: linear-gradient(135deg, #38bdf8, #6366f1); border: 1px solid var(--accent-cyan); width: 260px;">
+            Target Element (position: static)
+          </div>
+
+          <div class="pos-box" style="background: rgba(255,255,255,0.06); border: 1px solid var(--glass-border); margin-top: 0.75rem;">
+            Document Flow Node B (Static Sibling)
+          </div>
+
+          <!-- Extra content for sticky scroll test -->
+          <div style="height: 350px; padding: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">
+            ↕ Scroll inside this box to test sticky pinning behavior...
+            <p style="margin-top: 2rem;">Additional content row 1</p>
+            <p style="margin-top: 2rem;">Additional content row 2</p>
+            <p style="margin-top: 2rem;">Additional content row 3</p>
+          </div>
+        </div>
+
+        <div class="code-box" id="posCodeSnippet" style="margin-top: 1.25rem;">
+position: static; /* Remains strictly in the normal document flow */
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>static:</strong> Default value. Elements follow standard document flow; <code>top</code>, <code>left</code>, <code>right</code>, <code>bottom</code>, and <code>z-index</code> have no effect.</li>
+        <li><strong>relative:</strong> Element remains in standard flow, but is visually offset relative to its original position without moving sibling elements.</li>
+        <li><strong>absolute:</strong> Removed entirely from normal flow. Positioned relative to its nearest positioned ancestor (an ancestor with anything other than <code>position: static</code>).</li>
+        <li><strong>sticky:</strong> Hybrid between relative and fixed. Toggles between in-flow and viewport-pinned depending on scroll threshold.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="css-04-box-model.html" class="glass-btn">← Prev: Box Model</a>
+      <a href="index.html" class="glass-btn">CSS Programs</a>
+      <a href="css-06-flexbox-layout.html" class="glass-btn glass-btn-primary">Next: Flexbox Layout →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>CSS Experiment 05</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="index.html" class="glass-btn glass-btn-sm">CSS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    function setPosMode(mode) {
+      const box = document.getElementById('targetBox');
+      const snippet = document.getElementById('posCodeSnippet');
+
+      box.style.position = mode;
+      box.style.top = '';
+      box.style.right = '';
+      box.style.left = '';
+
+      if (mode === 'static') {
+        box.textContent = 'Target Element (position: static)';
+        snippet.textContent = 'position: static;\n/* Participates normally in document flow */';
+      } else if (mode === 'relative') {
+        box.style.top = '15px';
+        box.style.left = '35px';
+        box.textContent = 'Target Element (position: relative)';
+        snippet.textContent = 'position: relative;\ntop: 15px;\nleft: 35px;\n/* Offset 15px down and 35px right from natural spot */';
+      } else if (mode === 'absolute') {
+        box.style.top = '20px';
+        box.style.right = '20px';
+        box.textContent = 'Target Element (position: absolute)';
+        snippet.textContent = 'position: absolute;\ntop: 20px;\nright: 20px;\n/* Pulled out of document flow, pinned to container top-right */';
+      } else if (mode === 'sticky') {
+        box.style.top = '10px';
+        box.textContent = 'Target Element (position: sticky)';
+        snippet.textContent = 'position: sticky;\ntop: 10px;\n/* Sticks 10px from top when parent container scrolls */';
+        document.getElementById('scrollStage').scrollTop = 40;
+      }
+      showToast(`Position mode changed to: ${mode}`, 'info');
+    }
+  </script>
+</body>
+</html>
