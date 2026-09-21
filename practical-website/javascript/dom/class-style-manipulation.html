@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Experiment 08: Class & Style Manipulation | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .sample-box {
+      padding: 2rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.04);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    /* Dynamic Classes to Toggle */
+    .glow-cyan {
+      border-color: var(--accent-cyan) !important;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.5) !important;
+      background: rgba(56, 189, 248, 0.15) !important;
+    }
+    .pill-rounded {
+      border-radius: 9999px !important;
+    }
+    .elevate-3d {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#dom">DOM Manipulation</a>
+        <span>/</span>
+        <span>Class & Style</span>
+      </div>
+      <div class="meta-pill">Experiment 08 • DOM Manipulation</div>
+      <h1 class="program-title">ClassList & Inline Style Manipulation</h1>
+      <p class="program-desc">
+        Dynamically controlling element aesthetics and class states with classList (add, remove, toggle, contains) and writing direct inline CSS declarations via element.style.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box">
+        <!-- Interactive Preview Box -->
+        <div id="demoBox" class="sample-box">
+          <h3 id="boxTitle" style="color: #fff; margin-bottom: 0.5rem; font-size: 1.4rem;">
+            Interactive Dynamic Box
+          </h3>
+          <p id="boxClassesText" style="color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.9rem;">
+            Current classList: ["sample-box"]
+          </p>
+        </div>
+
+        <!-- ClassList Methods -->
+        <div style="margin-bottom: 1.25rem;">
+          <div style="font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.5rem; font-size: 0.9rem;">1. classList API Methods:</div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button onclick="toggleBoxClass('glow-cyan')" class="glass-btn glass-btn-primary glass-btn-sm">
+              Toggle .glow-cyan
+            </button>
+            <button onclick="toggleBoxClass('pill-rounded')" class="glass-btn glass-btn-accent glass-btn-sm">
+              Toggle .pill-rounded
+            </button>
+            <button onclick="toggleBoxClass('elevate-3d')" class="glass-btn glass-btn-sm">
+              Toggle .elevate-3d
+            </button>
+            <button onclick="checkClassPresence('glow-cyan')" class="glass-btn glass-btn-sm">
+              classList.contains('glow-cyan')
+            </button>
+          </div>
+        </div>
+
+        <!-- Inline Style Direct Manipulation -->
+        <div>
+          <div style="font-weight: 700; color: var(--accent-purple); margin-bottom: 0.5rem; font-size: 0.9rem;">2. Direct element.style Inline CSS:</div>
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+            <button onclick="setRandomColor()" class="glass-btn glass-btn-sm">Random Inline Background</button>
+            <button onclick="resetAllStyles()" class="glass-btn glass-btn-sm" style="background: rgba(251, 113, 133, 0.15);">Reset All Styles</button>
+          </div>
+        </div>
+
+        <div class="code-box" id="classCodeLog" style="margin-top: 1.25rem;">
+// Output: Click an action button to inspect classList mutations
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>classList API:</strong> Clean modern interface replacing clumsy string manipulation of <code>className</code>. Provides <code>add()</code>, <code>remove()</code>, <code>toggle()</code>, and <code>contains()</code>.</li>
+        <li><strong>element.style vs Stylesheet:</strong> Writing to <code>element.style.color = '#fff'</code> injects inline CSS with specificity (1,0,0,0), overriding rules declared in external stylesheets.</li>
+        <li><strong>CamelCase Property Naming:</strong> CSS hyphenated properties become camelCased in JavaScript (e.g. <code>background-color</code> becomes <code>style.backgroundColor</code>).</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="dynamic-element-creation.html" class="glass-btn">← Prev: Dynamic Elements</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="attribute-dataset-manipulation.html" class="glass-btn glass-btn-primary">Next: Attributes & Datasets →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Experiment 08</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    const box = document.getElementById('demoBox');
+
+    function updateClassDisplay() {
+      const classes = Array.from(box.classList);
+      document.getElementById('boxClassesText').textContent = `Current classList: ${JSON.stringify(classes)}`;
+    }
+
+    function toggleBoxClass(className) {
+      box.classList.toggle(className);
+      updateClassDisplay();
+      const has = box.classList.contains(className);
+      document.getElementById('classCodeLog').textContent = `element.classList.toggle('${className}'); // Now ${has ? 'present' : 'removed'}`;
+      showToast(`Toggled ${className}: ${has ? 'Added' : 'Removed'}`, 'info');
+    }
+
+    function checkClassPresence(className) {
+      const exists = box.classList.contains(className);
+      document.getElementById('classCodeLog').textContent = `const isPresent = element.classList.contains('${className}'); // Returns: ${exists}`;
+      showToast(`classList.contains('${className}') is ${exists}`, exists ? 'success' : 'warning');
+    }
+
+    function setRandomColor() {
+      const colors = ['rgba(56, 189, 248, 0.25)', 'rgba(168, 85, 247, 0.25)', 'rgba(52, 211, 153, 0.25)', 'rgba(251, 113, 133, 0.25)'];
+      const chosen = colors[Math.floor(Math.random() * colors.length)];
+      box.style.backgroundColor = chosen;
+      document.getElementById('classCodeLog').textContent = `element.style.backgroundColor = '${chosen}';`;
+      showToast('Inline backgroundColor style updated', 'success');
+    }
+
+    function resetAllStyles() {
+      box.className = 'sample-box';
+      box.style.backgroundColor = '';
+      updateClassDisplay();
+      document.getElementById('classCodeLog').textContent = `element.className = 'sample-box';\nelement.style.backgroundColor = '';`;
+      showToast('Box reset to default classes and styles', 'warning');
+    }
+  </script>
+</body>
+</html>

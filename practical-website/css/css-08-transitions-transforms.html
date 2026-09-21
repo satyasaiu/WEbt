@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Experiment 08: Transforms & Transitions | Yogendra</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .transform-stage {
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 800px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      margin-bottom: 1.5rem;
+    }
+    .transform-target-card {
+      width: 180px;
+      height: 120px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(168, 85, 247, 0.3));
+      border: 2px solid var(--accent-cyan);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../index.html" class="nav-brand">
+      <div class="brand-icon">🎨</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html" class="nav-link">Home</a></li>
+      <li><a href="../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="index.html" class="nav-link active">CSS Programs</a></li>
+      <li><a href="../javascript/index.html" class="nav-link">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../index.html">Home</a>
+        <span>/</span>
+        <a href="index.html">CSS Programs</a>
+        <span>/</span>
+        <span>Experiment 08</span>
+      </div>
+      <div class="meta-pill">Experiment 08 • Motion & Spatial Transformation</div>
+      <h1 class="program-title">CSS Transforms & Smooth Transitions</h1>
+      <p class="program-desc">
+        Manipulating elements in 2D and 3D space with CSS transform functions: translate, rotate, scale, skew, and 3D perspective with cubic-bezier transition curves.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box">
+        <!-- Interactive Stage -->
+        <div class="transform-stage">
+          <div id="targetCard" class="transform-target-card">
+            Interactive<br>Transform Card
+          </div>
+        </div>
+
+        <!-- Sliders Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              Rotate (<span id="rotVal">0°</span>):
+            </label>
+            <input type="range" id="rotSlider" min="-180" max="180" value="0" class="glass-input" style="padding: 0.2rem;" oninput="applyTransform()">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              Scale (<span id="scaleVal">1.0x</span>):
+            </label>
+            <input type="range" id="scaleSlider" min="0.5" max="1.8" step="0.05" value="1.0" class="glass-input" style="padding: 0.2rem;" oninput="applyTransform()">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              Translate X (<span id="transVal">0px</span>):
+            </label>
+            <input type="range" id="transSlider" min="-100" max="100" value="0" class="glass-input" style="padding: 0.2rem;" oninput="applyTransform()">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              3D Rotate Y (<span id="rotYVal">0°</span>):
+            </label>
+            <input type="range" id="rotYSlider" min="-75" max="75" value="0" class="glass-input" style="padding: 0.2rem;" oninput="applyTransform()">
+          </div>
+        </div>
+
+        <div style="margin-top: 1.25rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button onclick="resetTransform()" class="glass-btn glass-btn-sm">Reset Transform</button>
+          <button onclick="flip3DCard()" class="glass-btn glass-btn-primary glass-btn-sm">Trigger 3D Flip (180°)</button>
+        </div>
+
+        <div class="code-box" id="transformCodeSnippet" style="margin-top: 1.25rem;">
+transform: rotate(0deg) scale(1) translateX(0px) rotateY(0deg);
+transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Hardware Acceleration:</strong> Transforms (<code>translate</code>, <code>rotate</code>, <code>scale</code>) are computed on the GPU compositor thread, avoiding costly page reflow and repaint passes.</li>
+        <li><strong>3D Perspective:</strong> Setting <code>perspective: 800px</code> on the parent stage establishes the distance between the user's viewport and the z=0 plane, giving 3D rotations realistic visual depth.</li>
+        <li><strong>Transition Shorthand:</strong> <code>transition: [property] [duration] [timing-function] [delay]</code>. Easing functions like <code>cubic-bezier</code> produce organic, fluid deceleration.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="css-07-grid-layout.html" class="glass-btn">← Prev: CSS Grid</a>
+      <a href="index.html" class="glass-btn">CSS Programs</a>
+      <a href="css-09-keyframe-animations.html" class="glass-btn glass-btn-primary">Next: Keyframe Animations →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>CSS Experiment 08</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="index.html" class="glass-btn glass-btn-sm">CSS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    let isFlipped = false;
+
+    function applyTransform() {
+      const rot = document.getElementById('rotSlider').value;
+      const scale = document.getElementById('scaleSlider').value;
+      const trans = document.getElementById('transSlider').value;
+      const rotY = document.getElementById('rotYSlider').value;
+
+      document.getElementById('rotVal').textContent = rot + '°';
+      document.getElementById('scaleVal').textContent = scale + 'x';
+      document.getElementById('transVal').textContent = trans + 'px';
+      document.getElementById('rotYVal').textContent = rotY + '°';
+
+      const transformStr = `rotate(${rot}deg) scale(${scale}) translateX(${trans}px) rotateY(${rotY}deg)`;
+      document.getElementById('targetCard').style.transform = transformStr;
+      document.getElementById('transformCodeSnippet').textContent = `transform: ${transformStr};\ntransition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);`;
+    }
+
+    function resetTransform() {
+      document.getElementById('rotSlider').value = 0;
+      document.getElementById('scaleSlider').value = 1;
+      document.getElementById('transSlider').value = 0;
+      document.getElementById('rotYSlider').value = 0;
+      applyTransform();
+      showToast('Transforms reset to baseline', 'info');
+    }
+
+    function flip3DCard() {
+      isFlipped = !isFlipped;
+      document.getElementById('rotYSlider').value = isFlipped ? 180 : 0;
+      applyTransform();
+      showToast(isFlipped ? 'Card flipped 180° in 3D perspective' : 'Card restored', 'info');
+    }
+  </script>
+</body>
+</html>

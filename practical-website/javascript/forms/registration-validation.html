@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Experiment 14: Registration Form Validation | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.35rem;
+    }
+    .error-hint {
+      color: var(--accent-pink);
+      font-size: 0.8rem;
+      margin-top: 0.35rem;
+      min-height: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .is-invalid {
+      border-color: var(--accent-pink) !important;
+      box-shadow: 0 0 12px rgba(251, 113, 133, 0.3) !important;
+    }
+    .is-valid {
+      border-color: var(--accent-emerald) !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#forms">Forms & Validation</a>
+        <span>/</span>
+        <span>Registration Form</span>
+      </div>
+      <div class="meta-pill">Experiment 14 • Forms & Input Validation</div>
+      <h1 class="program-title">Student Registration Form Validation</h1>
+      <p class="program-desc">
+        Implementing comprehensive client-side form validation with real-time field checking, email regular expression patterns, password strength requirements, and error recovery banners.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box" style="max-width: 650px; margin: 0 auto;">
+        <form id="regForm" onsubmit="validateRegistration(event)" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="regName">Full Name</label>
+            <input type="text" id="regName" class="glass-input" placeholder="e.g. Yogendra" oninput="checkName()">
+            <div id="nameError" class="error-hint"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="regEmail">Academic Email Address</label>
+            <input type="email" id="regEmail" class="glass-input" placeholder="student@university.edu" oninput="checkEmail()">
+            <div id="emailError" class="error-hint"></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="regPassword">Password (Min 8 chars, 1 number, 1 symbol)</label>
+              <input type="password" id="regPassword" class="glass-input" placeholder="••••••••" oninput="checkPassword()">
+              <div id="passwordError" class="error-hint"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regConfirm">Confirm Password</label>
+              <input type="password" id="regConfirm" class="glass-input" placeholder="••••••••" oninput="checkConfirm()">
+              <div id="confirmError" class="error-hint"></div>
+            </div>
+          </div>
+
+          <!-- Password strength meter -->
+          <div style="margin-bottom: 1.25rem;">
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.25rem;">Password Strength:</div>
+            <div style="height: 6px; background: rgba(255,255,255,0.1); border-radius: 9999px; overflow: hidden;">
+              <div id="strengthMeter" style="height: 100%; width: 0%; transition: all 0.3s; background: var(--accent-pink);"></div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <button type="submit" class="glass-btn glass-btn-primary" style="flex: 1;">
+              Validate & Register Student Account
+            </button>
+            <button type="button" onclick="loadValidSample()" class="glass-btn glass-btn-sm">
+              Autofill Sample
+            </button>
+          </div>
+        </form>
+
+        <div id="formSuccessCard" style="display: none; margin-top: 1.5rem; background: rgba(52, 211, 153, 0.15); border: 1px solid var(--accent-emerald); padding: 1.25rem; border-radius: var(--radius-md); text-align: center;">
+          <h3 style="color: var(--accent-emerald); margin-bottom: 0.35rem;">✓ Registration Validated Successfully!</h3>
+          <p style="color: #fff; font-size: 0.9rem;">
+            All client-side regular expressions and validation constraints were satisfied without submission errors.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>novalidate Attribute:</strong> Disables browser default popups on <code>&lt;form novalidate&gt;</code>, allowing complete control with custom styled error badges.</li>
+        <li><strong>Email Regex:</strong> Uses <code>/^[^\s@]+@[^\s@]+\.[^\s@]+$/</code> to verify standard domain syntax.</li>
+        <li><strong>Event Prevention:</strong> <code>e.preventDefault()</code> stops form transmission until all error flags pass cleanly.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="../events/event-propagation.html" class="glass-btn">← Prev: Event Propagation</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="credit-card-validator.html" class="glass-btn glass-btn-primary">Next: Card Validator →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Experiment 14</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    function checkName() {
+      const el = document.getElementById('regName');
+      const err = document.getElementById('nameError');
+      if (el.value.trim().length < 3) {
+        el.className = 'glass-input is-invalid';
+        err.textContent = 'Name must be at least 3 characters long.';
+        return false;
+      }
+      el.className = 'glass-input is-valid';
+      err.textContent = '';
+      return true;
+    }
+
+    function checkEmail() {
+      const el = document.getElementById('regEmail');
+      const err = document.getElementById('emailError');
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!regex.test(el.value.trim())) {
+        el.className = 'glass-input is-invalid';
+        err.textContent = 'Enter a valid email address (e.g. name@domain.com).';
+        return false;
+      }
+      el.className = 'glass-input is-valid';
+      err.textContent = '';
+      return true;
+    }
+
+    function checkPassword() {
+      const el = document.getElementById('regPassword');
+      const err = document.getElementById('passwordError');
+      const meter = document.getElementById('strengthMeter');
+      const val = el.value;
+
+      let strength = 0;
+      if (val.length >= 8) strength += 25;
+      if (/[A-Z]/.test(val)) strength += 25;
+      if (/[0-9]/.test(val)) strength += 25;
+      if (/[^A-Za-z0-9]/.test(val)) strength += 25;
+
+      meter.style.width = strength + '%';
+      if (strength < 50) meter.style.background = 'var(--accent-pink)';
+      else if (strength < 75) meter.style.background = 'var(--accent-amber)';
+      else meter.style.background = 'var(--accent-emerald)';
+
+      if (val.length < 8 || !/[0-9]/.test(val) || !/[^A-Za-z0-9]/.test(val)) {
+        el.className = 'glass-input is-invalid';
+        err.textContent = 'Requires min 8 chars, 1 number & 1 special symbol.';
+        return false;
+      }
+      el.className = 'glass-input is-valid';
+      err.textContent = '';
+      return true;
+    }
+
+    function checkConfirm() {
+      const pass = document.getElementById('regPassword').value;
+      const confirm = document.getElementById('regConfirm');
+      const err = document.getElementById('confirmError');
+
+      if (!confirm.value || confirm.value !== pass) {
+        confirm.className = 'glass-input is-invalid';
+        err.textContent = 'Passwords do not match.';
+        return false;
+      }
+      confirm.className = 'glass-input is-valid';
+      err.textContent = '';
+      return true;
+    }
+
+    function validateRegistration(e) {
+      e.preventDefault();
+      const validName = checkName();
+      const validEmail = checkEmail();
+      const validPass = checkPassword();
+      const validConf = checkConfirm();
+
+      if (validName && validEmail && validPass && validConf) {
+        document.getElementById('formSuccessCard').style.display = 'block';
+        showToast('Registration validated successfully!', 'success');
+      } else {
+        document.getElementById('formSuccessCard').style.display = 'none';
+        showToast('Please correct form validation errors before submitting', 'error');
+      }
+    }
+
+    function loadValidSample() {
+      document.getElementById('regName').value = 'Yogendra';
+      document.getElementById('regEmail').value = 'yogendra@university.edu';
+      document.getElementById('regPassword').value = 'SecureWebLab@2025';
+      document.getElementById('regConfirm').value = 'SecureWebLab@2025';
+      checkName();
+      checkEmail();
+      checkPassword();
+      checkConfirm();
+      showToast('Loaded valid sample credentials', 'info');
+    }
+  </script>
+</body>
+</html>

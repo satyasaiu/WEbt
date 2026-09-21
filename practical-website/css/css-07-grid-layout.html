@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Experiment 07: CSS Grid Layout | Yogendra</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .grid-stage {
+      display: grid;
+      gap: 1rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px dashed var(--accent-purple);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      transition: all 0.3s ease;
+      min-height: 220px;
+    }
+    .grid-cell {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--accent-purple);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      color: #fff;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../index.html" class="nav-brand">
+      <div class="brand-icon">🎨</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html" class="nav-link">Home</a></li>
+      <li><a href="../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="index.html" class="nav-link active">CSS Programs</a></li>
+      <li><a href="../javascript/index.html" class="nav-link">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../index.html">Home</a>
+        <span>/</span>
+        <a href="index.html">CSS Programs</a>
+        <span>/</span>
+        <span>Experiment 07</span>
+      </div>
+      <div class="meta-pill">Experiment 07 • 2D Matrix Layouts</div>
+      <h1 class="program-title">CSS Grid 2D Layout System Studio</h1>
+      <p class="program-desc">
+        Mastering two-dimensional page structuring with CSS Grid: fractional fr units, auto-fit repeat patterns, explicit column/row spanning, and gutter gap management.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box">
+        <!-- Grid Presets -->
+        <div style="margin-bottom: 1.25rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button onclick="setGridTemplate('equal3')" class="glass-btn glass-btn-primary glass-btn-sm">Equal 3 Columns (1fr 1fr 1fr)</button>
+          <button onclick="setGridTemplate('sidebar')" class="glass-btn glass-btn-sm">Sidebar + Content (220px 1fr)</button>
+          <button onclick="setGridTemplate('autofit')" class="glass-btn glass-btn-accent glass-btn-sm">Fluid Auto-Fit (minmax(120px, 1fr))</button>
+          <button onclick="toggleGridSpan()" class="glass-btn glass-btn-sm">Toggle Feature Span (grid-column: span 2)</button>
+        </div>
+
+        <div id="gridStage" class="grid-stage" style="grid-template-columns: 1fr 1fr 1fr;">
+          <div id="spanCell" class="grid-cell" style="background: rgba(56, 189, 248, 0.25); border-color: var(--accent-cyan);">Cell 1 (Feature)</div>
+          <div class="grid-cell">Cell 2</div>
+          <div class="grid-cell">Cell 3</div>
+          <div class="grid-cell">Cell 4</div>
+          <div class="grid-cell">Cell 5</div>
+          <div class="grid-cell">Cell 6</div>
+        </div>
+
+        <div class="code-box" id="gridCodeSnippet" style="margin-top: 1.25rem;">
+display: grid;
+grid-template-columns: 1fr 1fr 1fr;
+gap: 1rem;
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Two-Dimensional Grid:</strong> Unlike Flexbox (which handles rows or columns individually), CSS Grid aligns items along both rows and columns simultaneously.</li>
+        <li><strong>Fractional Unit (fr):</strong> Represents a fraction of the available space inside the grid container after fixed tracks and gaps are subtracted.</li>
+        <li><strong>auto-fit & minmax:</strong> <code>grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))</code> achieves complete responsive card reflow without writing explicit media queries.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="css-06-flexbox-layout.html" class="glass-btn">← Prev: Flexbox</a>
+      <a href="index.html" class="glass-btn">CSS Programs</a>
+      <a href="css-08-transitions-transforms.html" class="glass-btn glass-btn-primary">Next: Transforms & Transitions →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>CSS Experiment 07</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="index.html" class="glass-btn glass-btn-sm">CSS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    let isSpanned = false;
+
+    function setGridTemplate(preset) {
+      const stage = document.getElementById('gridStage');
+      const snippet = document.getElementById('gridCodeSnippet');
+
+      if (preset === 'equal3') {
+        stage.style.gridTemplateColumns = '1fr 1fr 1fr';
+        snippet.textContent = 'display: grid;\ngrid-template-columns: 1fr 1fr 1fr;\ngap: 1rem;';
+      } else if (preset === 'sidebar') {
+        stage.style.gridTemplateColumns = '220px 1fr';
+        snippet.textContent = 'display: grid;\ngrid-template-columns: 220px 1fr;\ngap: 1rem;';
+      } else if (preset === 'autofit') {
+        stage.style.gridTemplateColumns = 'repeat(auto-fit, minmax(120px, 1fr))';
+        snippet.textContent = 'display: grid;\ngrid-template-columns: repeat(auto-fit, minmax(120px, 1fr));\ngap: 1rem;\n/* Responsive without media queries! */';
+      }
+      showToast(`Grid layout set to: ${preset}`, 'info');
+    }
+
+    function toggleGridSpan() {
+      isSpanned = !isSpanned;
+      const cell = document.getElementById('spanCell');
+      cell.style.gridColumn = isSpanned ? 'span 2' : 'span 1';
+      cell.textContent = isSpanned ? 'Cell 1 (Spans 2 Columns)' : 'Cell 1 (Feature)';
+      showToast(isSpanned ? 'Cell 1 spanning 2 columns' : 'Cell 1 span reset', 'info');
+    }
+  </script>
+</body>
+</html>

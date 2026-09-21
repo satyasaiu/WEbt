@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Experiment 01: Selectors & Specificity | Yogendra</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    /* Demo Selector Classes */
+    .selector-target {
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-sm);
+      margin: 0.5rem 0;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.03);
+      transition: all 0.3s ease;
+    }
+    .highlight-active {
+      border-color: var(--accent-cyan) !important;
+      background: rgba(56, 189, 248, 0.2) !important;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+      transform: translateX(8px);
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../index.html" class="nav-brand">
+      <div class="brand-icon">🎨</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html" class="nav-link">Home</a></li>
+      <li><a href="../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="index.html" class="nav-link active">CSS Programs</a></li>
+      <li><a href="../javascript/index.html" class="nav-link">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../index.html">Home</a>
+        <span>/</span>
+        <a href="index.html">CSS Programs</a>
+        <span>/</span>
+        <span>Experiment 01</span>
+      </div>
+      <div class="meta-pill">Experiment 01 • Cascade & Selectors</div>
+      <h1 class="program-title">CSS Selectors & Specificity Hierarchy</h1>
+      <p class="program-desc">
+        Understanding the CSS Cascade, specificity weight calculations (Inline > ID > Class/Attribute/Pseudo-class > Element), and combinator targeting rules.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box">
+        <div style="margin-bottom: 1.25rem;">
+          <p style="color: var(--text-secondary); margin-bottom: 0.75rem;">
+            Click a selector below to test how the browser engine queries and resolves targeted elements:
+          </p>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button onclick="testSelector('element', 'p')" class="glass-btn glass-btn-sm">Element (p)</button>
+            <button onclick="testSelector('class', '.student-card')" class="glass-btn glass-btn-sm">Class (.student-card)</button>
+            <button onclick="testSelector('id', '#specialItem')" class="glass-btn glass-btn-sm">ID (#specialItem)</button>
+            <button onclick="testSelector('attr', '[data-role=\"admin\"]')" class="glass-btn glass-btn-sm">Attribute ([data-role="admin"])</button>
+            <button onclick="testSelector('combinator', '.card-group > span')" class="glass-btn glass-btn-sm">Child Combinator (&gt;)</button>
+            <button onclick="clearSelectorHighlights()" class="glass-btn glass-btn-sm" style="background: rgba(251, 113, 133, 0.2);">Reset</button>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+          <!-- Target Preview DOM -->
+          <div id="targetContainer" style="background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 1.25rem; border-radius: var(--radius-md);">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.75rem;">Interactive Target Sandbox:</div>
+            
+            <p class="selector-target">Simple Element: &lt;p&gt; Paragraph Content &lt;/p&gt;</p>
+            <div class="selector-target student-card">Class Element: &lt;div class="student-card"&gt; Student Profile &lt;/div&gt;</div>
+            <div id="specialItem" class="selector-target">ID Element: &lt;div id="specialItem"&gt; Unique Identifier &lt;/div&gt;</div>
+            <div class="selector-target" data-role="admin">Attribute Element: &lt;div data-role="admin"&gt; Admin Console &lt;/div&gt;</div>
+            <div class="selector-target card-group">
+              Child Parent: &lt;div class="card-group"&gt;
+              <span class="selector-target" style="display: block; margin-top: 0.35rem;">Direct Child Span (&gt;)</span>
+            </div>
+          </div>
+
+          <!-- Specificity Calculation Card -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 1.25rem; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.5rem;">Live Specificity Score Breakdown</div>
+              <div id="activeSelectorText" style="font-family: var(--font-mono); font-size: 1.1rem; color: #fff; margin-bottom: 0.75rem;">
+                Select a test above
+              </div>
+              <p id="selectorExplanation" style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                Click any selector button above to calculate its specific weighting tuple (Inline, ID, Class, Element) under standard W3C specificity rules.
+              </p>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); padding: 0.75rem; border-radius: 8px; border: 1px solid var(--glass-border);">
+              <div style="display: flex; justify-content: space-around; text-align: center;">
+                <div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted);">INLINE</div>
+                  <div id="specInline" style="font-size: 1.2rem; font-weight: 700; color: var(--accent-pink);">0</div>
+                </div>
+                <div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted);">ID</div>
+                  <div id="specId" style="font-size: 1.2rem; font-weight: 700; color: var(--accent-purple);">0</div>
+                </div>
+                <div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted);">CLASS</div>
+                  <div id="specClass" style="font-size: 1.2rem; font-weight: 700; color: var(--accent-cyan);">0</div>
+                </div>
+                <div>
+                  <div style="font-size: 0.7rem; color: var(--text-muted);">ELEMENT</div>
+                  <div id="specElem" style="font-size: 1.2rem; font-weight: 700; color: var(--accent-emerald);">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Specificity Weight:</strong> Represented as a 4-part tuple <code>(a, b, c, d)</code>:
+          <ul>
+            <li><code>a</code>: Inline styles (e.g. <code>style="..."</code>) = 1,0,0,0</li>
+            <li><code>b</code>: ID selectors (e.g. <code>#specialItem</code>) = 0,1,0,0</li>
+            <li><code>c</code>: Classes, attributes, and pseudo-classes (e.g. <code>.card</code>, <code>[data-role]</code>, <code>:hover</code>) = 0,0,1,0</li>
+            <li><code>d</code>: Type/element and pseudo-elements (e.g. <code>p</code>, <code>div</code>, <code>::before</code>) = 0,0,0,1</li>
+          </ul>
+        </li>
+        <li><strong>The Cascade Order:</strong> When two competing rules target the same element with identical specificity, the rule written last in the stylesheet source wins.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="index.html" class="glass-btn">← Back to CSS Programs</a>
+      <a href="../index.html" class="glass-btn">🏠 Home</a>
+      <a href="css-02-colors-backgrounds.html" class="glass-btn glass-btn-primary">Next: Colors & Backgrounds →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>CSS Experiment 01</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="index.html" class="glass-btn glass-btn-sm">CSS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    function clearSelectorHighlights() {
+      document.querySelectorAll('#targetContainer .selector-target').forEach(el => {
+        el.classList.remove('highlight-active');
+      });
+      document.getElementById('activeSelectorText').textContent = 'None';
+      document.getElementById('selectorExplanation').textContent = 'Highlights cleared.';
+      document.getElementById('specInline').textContent = '0';
+      document.getElementById('specId').textContent = '0';
+      document.getElementById('specClass').textContent = '0';
+      document.getElementById('specElem').textContent = '0';
+    }
+
+    function testSelector(type, query) {
+      clearSelectorHighlights();
+      const targets = document.querySelectorAll('#targetContainer ' + query);
+      targets.forEach(el => el.classList.add('highlight-active'));
+
+      document.getElementById('activeSelectorText').textContent = query;
+
+      const scores = {
+        element: { i: 0, id: 0, c: 0, e: 1, desc: 'Element selector targets all tags matching the tag name. Low specificity (0-0-0-1).' },
+        class: { i: 0, id: 0, c: 1, e: 0, desc: 'Class selector matches all elements bearing class="student-card". Specificity (0-0-1-0).' },
+        id: { i: 0, id: 1, c: 0, e: 0, desc: 'ID selector targets uniquely identified elements. High specificity (0-1-0-0).' },
+        attr: { i: 0, id: 0, c: 1, e: 0, desc: 'Attribute selector matches elements containing specific attributes and values. Specificity (0-0-1-0).' },
+        combinator: { i: 0, id: 0, c: 1, e: 1, desc: 'Child combinator (.card-group > span) specifies immediate child tags. Specificity: 1 class + 1 element = (0-0-1-1).' }
+      };
+
+      const score = scores[type];
+      document.getElementById('specInline').textContent = score.i;
+      document.getElementById('specId').textContent = score.id;
+      document.getElementById('specClass').textContent = score.c;
+      document.getElementById('specElem').textContent = score.e;
+      document.getElementById('selectorExplanation').textContent = score.desc;
+      showToast(`Selected ${query} (${targets.length} match)`, 'info');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Experiment 02: Colors & Backgrounds | Yogendra</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <style>
+    .gradient-preview-canvas {
+      height: 200px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #fff;
+      font-size: 1.2rem;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      transition: background 0.4s ease;
+      margin-bottom: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../index.html" class="nav-brand">
+      <div class="brand-icon">🎨</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../index.html" class="nav-link">Home</a></li>
+      <li><a href="../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="index.html" class="nav-link active">CSS Programs</a></li>
+      <li><a href="../javascript/index.html" class="nav-link">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../index.html">Home</a>
+        <span>/</span>
+        <a href="index.html">CSS Programs</a>
+        <span>/</span>
+        <span>Experiment 02</span>
+      </div>
+      <div class="meta-pill">Experiment 02 • Visual Styling</div>
+      <h1 class="program-title">Colors, Gradients & Background Styling</h1>
+      <p class="program-desc">
+        Demonstrating modern CSS color spaces (HEX, RGB/RGBA, HSL/HSLA), linear and radial gradients, dynamic gradient angle manipulation, and backdrop filters.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box">
+        <!-- Live Gradient Playground -->
+        <div id="gradientPreview" class="gradient-preview-canvas" style="background: linear-gradient(135deg, #38bdf8, #a855f7);">
+          Dynamic CSS Background Output
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+          <!-- Controls -->
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              Gradient Type:
+            </label>
+            <select id="gradType" class="glass-select" onchange="updateGradient()">
+              <option value="linear">Linear Gradient</option>
+              <option value="radial">Radial Gradient</option>
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              Primary Color (HEX/RGB):
+            </label>
+            <input type="color" id="color1" value="#38bdf8" class="glass-input" style="padding: 0.2rem; height: 42px;" oninput="updateGradient()">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              Secondary Color (HEX/RGB):
+            </label>
+            <input type="color" id="color2" value="#a855f7" class="glass-input" style="padding: 0.2rem; height: 42px;" oninput="updateGradient()">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              Linear Angle (<span id="angleValue">135°</span>):
+            </label>
+            <input type="range" id="gradAngle" min="0" max="360" value="135" class="glass-input" style="padding: 0.2rem;" oninput="updateGradient()">
+          </div>
+        </div>
+
+        <div class="code-box" id="cssOutputBox" style="margin-top: 1.25rem;">
+background: linear-gradient(135deg, #38bdf8, #a855f7);
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Color Representations:</strong>
+          <ul>
+            <li><code>HEX:</code> <code>#38bdf8</code> (Hexadecimal red, green, blue values from 00 to FF).</li>
+            <li><code>RGBA:</code> <code>rgba(56, 189, 248, 0.8)</code> includes alpha opacity from 0.0 (transparent) to 1.0 (opaque).</li>
+            <li><code>HSL:</code> <code>hsl(199, 95%, 60%)</code> defines hue angle (0–360°), saturation (%), and lightness (%).</li>
+          </ul>
+        </li>
+        <li><strong>Linear vs Radial Gradients:</strong> Linear gradients transition along a straight directional vector (degrees or keywords like <code>to bottom right</code>), while radial gradients emanate outward from a central circular or elliptical focal point.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="css-01-selectors-specificity.html" class="glass-btn">← Prev: Selectors</a>
+      <a href="index.html" class="glass-btn">CSS Programs</a>
+      <a href="css-03-typography-fonts.html" class="glass-btn glass-btn-primary">Next: Typography →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>CSS Experiment 02</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="index.html" class="glass-btn glass-btn-sm">CSS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    function updateGradient() {
+      const type = document.getElementById('gradType').value;
+      const c1 = document.getElementById('color1').value;
+      const c2 = document.getElementById('color2').value;
+      const angle = document.getElementById('gradAngle').value;
+      document.getElementById('angleValue').textContent = angle + '°';
+
+      let bgStyle = '';
+      if (type === 'linear') {
+        bgStyle = `linear-gradient(${angle}deg, ${c1}, ${c2})`;
+      } else {
+        bgStyle = `radial-gradient(circle at center, ${c1}, ${c2})`;
+      }
+
+      document.getElementById('gradientPreview').style.background = bgStyle;
+      document.getElementById('cssOutputBox').textContent = `background: ${bgStyle};`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Experiment 15: Luhn Card Validator (Dummy Data) | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .card-graphic {
+      width: 100%;
+      max-width: 360px;
+      height: 200px;
+      margin: 0 auto 1.5rem auto;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      border: 1px solid var(--accent-cyan);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.6);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #fff;
+      font-family: var(--font-mono);
+      position: relative;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#forms">Forms & Validation</a>
+        <span>/</span>
+        <span>Card Validator</span>
+      </div>
+      <div class="meta-pill">Experiment 15 • Forms & Algorithmic Validation</div>
+      <h1 class="program-title">Payment Card Validator (Luhn Algorithm)</h1>
+      <p class="program-desc">
+        Implementing the ISO/IEC 7812 Luhn checksum algorithm (Mod 10), automated IIN issuer identification (Visa, Mastercard, Amex), and input masking using simulated dummy test data.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box" style="max-width: 600px; margin: 0 auto;">
+        <!-- Academic Disclaimer -->
+        <div style="background: rgba(234, 179, 8, 0.15); border: 1px solid var(--accent-amber); padding: 0.85rem 1.25rem; border-radius: var(--radius-sm); margin-bottom: 1.5rem; font-size: 0.85rem; color: #fde047;">
+          ⚠️ <strong>Educational Simulation Only:</strong> This program processes simulated test numbers using the Luhn Algorithm. Never enter real banking or payment credentials.
+        </div>
+
+        <!-- Virtual Card Graphic -->
+        <div class="card-graphic">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="width: 40px; height: 28px; background: #fbbf24; border-radius: 6px; opacity: 0.85;"></div>
+            <span id="cardBrandLabel" style="font-weight: 700; color: var(--accent-cyan); font-size: 1.1rem;">GENERIC</span>
+          </div>
+          <div id="cardNumPreview" style="font-size: 1.25rem; letter-spacing: 0.12em;">
+            •••• •••• •••• ••••
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+            <div>
+              <span style="font-size: 0.65rem; color: var(--text-muted); display: block;">CARDHOLDER</span>
+              <span>YOGENDRA</span>
+            </div>
+            <div>
+              <span style="font-size: 0.65rem; color: var(--text-muted); display: block;">EXPIRES</span>
+              <span id="cardExpPreview">12/28</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input Form -->
+        <form onsubmit="handleCardValidation(event)">
+          <div style="margin-bottom: 1.25rem;">
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              Test Card Number (Luhn Checksum):
+            </label>
+            <input type="text" id="cardNumberInput" class="glass-input" placeholder="4111 1111 1111 1111" maxlength="19" oninput="formatCardInput(this)">
+            <div id="luhnStatusText" style="font-size: 0.85rem; margin-top: 0.35rem; font-weight: 600;"></div>
+          </div>
+
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+            <button type="button" onclick="loadTestCard('visa')" class="glass-btn glass-btn-sm">Load Visa (4111...)</button>
+            <button type="button" onclick="loadTestCard('mastercard')" class="glass-btn glass-btn-sm">Load MC (5555...)</button>
+            <button type="button" onclick="loadTestCard('invalid')" class="glass-btn glass-btn-sm" style="color:var(--accent-pink)">Load Invalid Number</button>
+          </div>
+
+          <button type="submit" class="glass-btn glass-btn-primary" style="width: 100%;">
+            Verify Luhn Mod-10 Checksum
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Luhn Algorithm (Mod 10):</strong> Starting from the rightmost check digit, double every second digit. If doubling results in a number &gt; 9, subtract 9 (or add digits). Sum all values; the number is valid if and only if <code>sum % 10 === 0</code>.</li>
+        <li><strong>IIN Prefix Detection:</strong> Cards starting with <code>4</code> are Visa; <code>51-55</code> or <code>22-27</code> are Mastercard; <code>34/37</code> are American Express.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="registration-validation.html" class="glass-btn">← Prev: Registration Validation</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="survey-form-validation.html" class="glass-btn glass-btn-primary">Next: Survey Multi-Step Form →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Experiment 15</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    function luhnCheck(val) {
+      const clean = val.replace(/\D/g, '');
+      if (clean.length < 13) return false;
+
+      let sum = 0;
+      let shouldDouble = false;
+      for (let i = clean.length - 1; i >= 0; i--) {
+        let digit = parseInt(clean.charAt(i), 10);
+        if (shouldDouble) {
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+        shouldDouble = !shouldDouble;
+      }
+      return (sum % 10) === 0;
+    }
+
+    function formatCardInput(input) {
+      let v = input.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+      let matches = v.match(/\d{4,16}/g);
+      let match = matches && matches[0] || '';
+      let parts = [];
+      for (let i = 0, len = match.length; i < len; i += 4) {
+        parts.push(match.substring(i, i + 4));
+      }
+      if (parts.length) {
+        input.value = parts.join(' ');
+      }
+
+      // Brand Detection
+      const brandLabel = document.getElementById('cardBrandLabel');
+      if (v.startsWith('4')) brandLabel.textContent = 'VISA';
+      else if (/^(5[1-5]|2[2-7])/.test(v)) brandLabel.textContent = 'MASTERCARD';
+      else if (/^3[47]/.test(v)) brandLabel.textContent = 'AMEX';
+      else brandLabel.textContent = 'GENERIC';
+
+      document.getElementById('cardNumPreview').textContent = input.value || '•••• •••• •••• ••••';
+    }
+
+    function handleCardValidation(e) {
+      e.preventDefault();
+      const input = document.getElementById('cardNumberInput');
+      const status = document.getElementById('luhnStatusText');
+      const isValid = luhnCheck(input.value);
+
+      if (isValid) {
+        status.textContent = '✓ Valid Checksum: Passes ISO/IEC 7812 Luhn Algorithm';
+        status.style.color = 'var(--accent-emerald)';
+        showToast('Valid Luhn checksum confirmed', 'success');
+      } else {
+        status.textContent = '✕ Invalid Checksum: Does not satisfy Mod-10 verification';
+        status.style.color = 'var(--accent-pink)';
+        showToast('Invalid Luhn checksum', 'error');
+      }
+    }
+
+    function loadTestCard(type) {
+      const input = document.getElementById('cardNumberInput');
+      if (type === 'visa') input.value = '4111 1111 1111 1111';
+      else if (type === 'mastercard') input.value = '5555 5555 5555 4444';
+      else input.value = '4111 1111 1111 1119';
+      formatCardInput(input);
+      handleCardValidation(new Event('submit'));
+    }
+  </script>
+</body>
+</html>

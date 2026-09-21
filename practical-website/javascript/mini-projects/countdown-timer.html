@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Mini Project 04: Countdown Timer | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .timer-card {
+      max-width: 520px;
+      margin: 0 auto;
+      text-align: center;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 2.5rem 2rem;
+      backdrop-filter: blur(25px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .timer-ring-container {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      margin: 1.5rem auto;
+    }
+    .timer-svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+    .timer-circle-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.1);
+      stroke-width: 10;
+    }
+    .timer-circle-progress {
+      fill: none;
+      stroke: var(--accent-cyan);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-dasharray: 565;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 0.8s linear, stroke 0.3s;
+    }
+    .timer-center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2.4rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#mini-projects">Mini Projects</a>
+        <span>/</span>
+        <span>Countdown Timer</span>
+      </div>
+      <div class="meta-pill">Experiment 04 • JavaScript Mini Project</div>
+      <h1 class="program-title">Customizable Countdown Timer</h1>
+      <p class="program-desc">
+        An interactive countdown timer with SVG circular progress meter, presets (1m, 5m, 10m), pause/resume mechanics, and audio-visual completion notifications.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box" style="padding: 2.5rem 1rem;">
+        <div class="timer-card">
+          <!-- Quick Presets -->
+          <div style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+            <button onclick="setTimerPreset(60)" class="glass-btn glass-btn-sm">1 Min</button>
+            <button onclick="setTimerPreset(300)" class="glass-btn glass-btn-sm">5 Min</button>
+            <button onclick="setTimerPreset(600)" class="glass-btn glass-btn-sm">10 Min</button>
+            <button onclick="setTimerPreset(10)" class="glass-btn glass-btn-sm" style="border-color: var(--accent-pink);">10 Sec (Quick Test)</button>
+          </div>
+
+          <!-- Circular Progress Ring -->
+          <div class="timer-ring-container">
+            <svg class="timer-svg" viewBox="0 0 200 200">
+              <circle class="timer-circle-bg" cx="100" cy="100" r="90" />
+              <circle id="timerProgress" class="timer-circle-progress" cx="100" cy="100" r="90" />
+            </svg>
+            <div id="timerText" class="timer-center-text">01:00</div>
+          </div>
+
+          <!-- Controls -->
+          <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+            <button onclick="startTimer()" id="timerStartBtn" class="glass-btn glass-btn-primary">Start Timer ▶</button>
+            <button onclick="pauseTimer()" id="timerPauseBtn" class="glass-btn" disabled>Pause ⏸</button>
+            <button onclick="resetTimer()" id="timerResetBtn" class="glass-btn">Reset ↺</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>SVG Stroke Dashoffset:</strong> A circle with radius <code>r=90</code> has a circumference \(2\pi r \approx 565.48\). As time elapses, <code>stroke-dashoffset</code> scales proportionally from 0 to 565 to visually drain the ring.</li>
+        <li><strong>Synthesized Completion Chime:</strong> When timer reaches 0, the Web Audio API synthesizes a pleasant dual-tone chime (587Hz &rarr; 880Hz) without relying on external MP3 audio files.</li>
+        <li><strong>Stateful Resumption:</strong> Pausing stores the exact seconds remaining, allowing seamless continuation upon unpausing.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="stopwatch.html" class="glass-btn">← Prev: Stopwatch</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="todo-list.html" class="glass-btn glass-btn-primary">Next: To-Do App →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Mini Project 04</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    let totalSeconds = 60;
+    let remainingSeconds = 60;
+    let countdownInterval = null;
+    const CIRCUMFERENCE = 565; // 2 * PI * 90
+
+    function updateTimerDisplay() {
+      const m = Math.floor(remainingSeconds / 60);
+      const s = remainingSeconds % 60;
+      document.getElementById('timerText').textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+      const progressCircle = document.getElementById('timerProgress');
+      const offset = CIRCUMFERENCE - (remainingSeconds / totalSeconds) * CIRCUMFERENCE;
+      progressCircle.style.strokeDashoffset = offset;
+
+      if (remainingSeconds <= 5 && remainingSeconds > 0) {
+        progressCircle.style.stroke = 'var(--accent-pink)';
+      } else {
+        progressCircle.style.stroke = 'var(--accent-cyan)';
+      }
+    }
+
+    function setTimerPreset(seconds) {
+      pauseTimer();
+      totalSeconds = seconds;
+      remainingSeconds = seconds;
+      updateTimerDisplay();
+      showToast(`Timer set to ${seconds} seconds`, 'info');
+    }
+
+    function startTimer() {
+      if (!countdownInterval && remainingSeconds > 0) {
+        countdownInterval = setInterval(() => {
+          remainingSeconds--;
+          updateTimerDisplay();
+
+          if (remainingSeconds <= 0) {
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+            document.getElementById('timerStartBtn').disabled = false;
+            document.getElementById('timerPauseBtn').disabled = true;
+            playChime();
+            showToast('⏰ Time is up! Countdown completed.', 'success');
+          }
+        }, 1000);
+
+        document.getElementById('timerStartBtn').disabled = true;
+        document.getElementById('timerPauseBtn').disabled = false;
+      }
+    }
+
+    function pauseTimer() {
+      if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+        document.getElementById('timerStartBtn').disabled = false;
+        document.getElementById('timerPauseBtn').disabled = true;
+        showToast('Timer paused', 'info');
+      }
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      remainingSeconds = totalSeconds;
+      updateTimerDisplay();
+      showToast('Timer reset', 'warning');
+    }
+
+    function playChime() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+        osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.5); // A5
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.8);
+      } catch (e) {}
+    }
+
+    updateTimerDisplay();
+  </script>
+</body>
+</html>

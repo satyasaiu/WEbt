@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Mini Project 05: To-Do App | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .todo-app-card {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 2rem;
+      backdrop-filter: blur(25px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .task-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      margin-bottom: 0.6rem;
+      transition: all 0.25s ease;
+    }
+    .task-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--glass-border-hover);
+    }
+    .task-item.completed span.task-text {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#mini-projects">Mini Projects</a>
+        <span>/</span>
+        <span>To-Do List</span>
+      </div>
+      <div class="meta-pill">Experiment 05 • JavaScript Mini Project</div>
+      <h1 class="program-title">Interactive Task Manager (To-Do App)</h1>
+      <p class="program-desc">
+        A productivity task organizer featuring task creation, completion toggles, active/completed filters, live statistics, and persistent synchronization with browser localStorage.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box" style="padding: 2rem 1rem;">
+        <div class="todo-app-card">
+          <!-- Input Form -->
+          <form onsubmit="addTask(event)" style="display: flex; gap: 0.75rem; margin-bottom: 1.25rem;">
+            <input type="text" id="taskInput" class="glass-input" placeholder="What task needs to be completed?" required>
+            <button type="submit" class="glass-btn glass-btn-primary" style="white-space: nowrap;">Add Task +</button>
+          </form>
+
+          <!-- Filter & Statistics Bar -->
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; padding-bottom: 1rem; border-bottom: 1px solid var(--glass-border); margin-bottom: 1rem;">
+            <div style="display: flex; gap: 0.4rem;">
+              <button onclick="setFilter('all')" class="glass-btn glass-btn-sm" id="filterAll">All</button>
+              <button onclick="setFilter('active')" class="glass-btn glass-btn-sm" id="filterActive">Active</button>
+              <button onclick="setFilter('completed')" class="glass-btn glass-btn-sm" id="filterCompleted">Completed</button>
+            </div>
+            <div id="statsCounter" style="font-size: 0.85rem; color: var(--accent-cyan); font-weight: 600;">
+              0 tasks remaining
+            </div>
+          </div>
+
+          <!-- Tasks List Container -->
+          <div id="taskList"></div>
+
+          <!-- Empty State -->
+          <div id="emptyMessage" style="text-align: center; padding: 2rem 1rem; color: var(--text-muted); font-size: 0.95rem;">
+            No tasks found. Add a task above to get started!
+          </div>
+
+          <!-- Clear Completed Button -->
+          <div style="margin-top: 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+            <button onclick="clearCompletedTasks()" class="glass-btn glass-btn-sm" style="background: rgba(251, 113, 133, 0.15); border-color: rgba(251, 113, 133, 0.3);">
+              Clear Completed
+            </button>
+            <button onclick="resetDefaultTasks()" class="glass-btn glass-btn-sm">
+              Load Sample Tasks
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Data Model:</strong> Each task is represented as an object: <code>{ id: timestamp, title: string, completed: boolean }</code>.</li>
+        <li><strong>Array Methods:</strong> Operates using functional array techniques: <code>filter()</code>, <code>map()</code>, and <code>find()</code> to maintain immutable state transitions.</li>
+        <li><strong>LocalStorage Synchronization:</strong> Calls <code>localStorage.setItem('weblab_tasks', JSON.stringify(tasks))</code> on any modification, ensuring data remains intact upon page refresh.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="countdown-timer.html" class="glass-btn">← Prev: Countdown Timer</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="../dom/element-selection-text.html" class="glass-btn glass-btn-primary">Next: DOM Element Selection →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Mini Project 05</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    let tasks = [];
+    let currentFilter = 'all';
+
+    function initTasks() {
+      const saved = localStorage.getItem('weblab_todo_tasks');
+      if (saved) {
+        try { tasks = JSON.parse(saved); } catch (e) { tasks = []; }
+      }
+      if (!tasks || tasks.length === 0) {
+        resetDefaultTasks();
+      } else {
+        renderTasks();
+      }
+    }
+
+    function saveTasks() {
+      localStorage.setItem('weblab_todo_tasks', JSON.stringify(tasks));
+      renderTasks();
+    }
+
+    function addTask(e) {
+      e.preventDefault();
+      const input = document.getElementById('taskInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      tasks.push({
+        id: Date.now(),
+        text: text,
+        completed: false
+      });
+      input.value = '';
+      saveTasks();
+      showToast('Task added successfully', 'success');
+    }
+
+    function toggleTask(id) {
+      const task = tasks.find(t => t.id === id);
+      if (task) {
+        task.completed = !task.completed;
+        saveTasks();
+        showToast(task.completed ? 'Task marked complete' : 'Task marked active', 'info');
+      }
+    }
+
+    function deleteTask(id) {
+      tasks = tasks.filter(t => t.id !== id);
+      saveTasks();
+      showToast('Task deleted', 'warning');
+    }
+
+    function clearCompletedTasks() {
+      const countBefore = tasks.length;
+      tasks = tasks.filter(t => !t.completed);
+      saveTasks();
+      const removed = countBefore - tasks.length;
+      showToast(`Cleared ${removed} completed task(s)`, 'info');
+    }
+
+    function resetDefaultTasks() {
+      tasks = [
+        { id: 1, text: 'Review HTML5 Semantic Structure (Exp 01-05)', completed: true },
+        { id: 2, text: 'Practice CSS Flexbox & 2D Grid layouts', completed: true },
+        { id: 3, text: 'Complete JavaScript Practical Programs Website', completed: false },
+        { id: 4, text: 'Prepare documentation and viva presentation', completed: false }
+      ];
+      saveTasks();
+      showToast('Loaded sample college study tasks', 'info');
+    }
+
+    function setFilter(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('#filterAll, #filterActive, #filterCompleted').forEach(b => b.classList.remove('active'));
+      if (filter === 'all') document.getElementById('filterAll').classList.add('active');
+      if (filter === 'active') document.getElementById('filterActive').classList.add('active');
+      if (filter === 'completed') document.getElementById('filterCompleted').classList.add('active');
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const listEl = document.getElementById('taskList');
+      const emptyMsg = document.getElementById('emptyMessage');
+      listEl.innerHTML = '';
+
+      const filtered = tasks.filter(t => {
+        if (currentFilter === 'active') return !t.completed;
+        if (currentFilter === 'completed') return t.completed;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        emptyMsg.style.display = 'block';
+      } else {
+        emptyMsg.style.display = 'none';
+        filtered.forEach(task => {
+          const item = document.createElement('div');
+          item.className = 'task-item' + (task.completed ? ' completed' : '');
+          item.innerHTML = `
+            <div style="display:flex; align-items:center; gap:0.75rem; flex-grow:1; cursor:pointer;" onclick="toggleTask(${task.id})">
+              <input type="checkbox" ${task.completed ? 'checked' : ''} style="cursor:pointer;" onclick="event.stopPropagation(); toggleTask(${task.id})">
+              <span class="task-text" style="font-size:0.95rem; color:#fff;">${task.text}</span>
+            </div>
+            <button onclick="deleteTask(${task.id})" class="glass-btn glass-btn-sm" style="padding:0.25rem 0.6rem; color:var(--accent-pink);">✕</button>
+          `;
+          listEl.appendChild(item);
+        });
+      }
+
+      const activeCount = tasks.filter(t => !t.completed).length;
+      document.getElementById('statsCounter').textContent = `${activeCount} task${activeCount === 1 ? '' : 's'} remaining`;
+    }
+
+    initTasks();
+    setFilter('all');
+  </script>
+</body>
+</html>
