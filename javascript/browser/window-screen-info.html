@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Experiment 18: Window & Screen Inspector | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .metric-tile {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .metric-val {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      font-family: var(--font-mono);
+      margin: 0.35rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#browser">Browser Features</a>
+        <span>/</span>
+        <span>Window & Screen</span>
+      </div>
+      <div class="meta-pill">Experiment 18 • Browser Object Model (BOM)</div>
+      <h1 class="program-title">Window & Screen Objects Inspector</h1>
+      <p class="program-desc">
+        Real-time telemetry inspector querying the Browser Object Model (BOM): window.innerWidth, window.innerHeight, screen.width, screen.colorDepth, devicePixelRatio, and resize events.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.25rem;">
+          <div class="metric-tile">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Viewport Inner Width</div>
+            <div id="winInnerW" class="metric-val">0px</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">window.innerWidth</div>
+          </div>
+          <div class="metric-tile">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Viewport Inner Height</div>
+            <div id="winInnerH" class="metric-val">0px</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">window.innerHeight</div>
+          </div>
+          <div class="metric-tile">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Screen Resolution</div>
+            <div id="screenRes" class="metric-val" style="color:var(--accent-purple)">0×0</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">screen.width × screen.height</div>
+          </div>
+          <div class="metric-tile">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Device Pixel Ratio</div>
+            <div id="pixelRatio" class="metric-val" style="color:var(--accent-emerald)">1.0x</div>
+            <div style="font-size: 0.75rem; color: var(--text-secondary);">window.devicePixelRatio (HiDPI)</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; background: rgba(0,0,0,0.35); border: 1px solid var(--glass-border); padding: 1.25rem; border-radius: var(--radius-md);">
+          <div style="font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.5rem;">Live BOM Properties Status:</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 0.75rem; font-size: 0.9rem; color: var(--text-secondary);">
+            <div>Color Depth: <strong id="colorDepth" style="color:#fff">24-bit</strong></div>
+            <div>Orientation: <strong id="orientationMode" style="color:#fff">Landscape</strong></div>
+            <div>Outer Window Width: <strong id="outerW" style="color:#fff">0px</strong></div>
+            <div>Scroll Y Position: <strong id="scrollYVal" style="color:#fff">0px</strong></div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.25rem; text-align: center;">
+          <p style="color: var(--text-muted); font-size: 0.85rem;">
+            ↔ Resize your browser window to observe real-time BOM telemetry updates via the <code>window.onresize</code> listener.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>BOM Hierarchy:</strong> The <code>window</code> object represents the top-level global environment in client-side JavaScript. Both <code>document</code> and <code>screen</code> are child properties of <code>window</code>.</li>
+        <li><strong>innerWidth vs outerWidth:</strong> <code>innerWidth</code> measures the content viewport excluding browser title bars, window borders, and developer tools. <code>outerWidth</code> measures the physical outer application window.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="../forms/instant-feedback-form.html" class="glass-btn">← Prev: Instant Feedback</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="location-history.html" class="glass-btn glass-btn-primary">Next: Location & History →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Experiment 18</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    function updateMetrics() {
+      document.getElementById('winInnerW').textContent = window.innerWidth + 'px';
+      document.getElementById('winInnerH').textContent = window.innerHeight + 'px';
+      document.getElementById('screenRes').textContent = `${screen.width}×${screen.height}`;
+      document.getElementById('pixelRatio').textContent = (window.devicePixelRatio || 1).toFixed(1) + 'x';
+      document.getElementById('colorDepth').textContent = (screen.colorDepth || 24) + '-bit';
+      document.getElementById('outerW').textContent = window.outerWidth + 'px';
+      document.getElementById('scrollYVal').textContent = Math.round(window.scrollY) + 'px';
+
+      const isLandscape = window.innerWidth > window.innerHeight;
+      document.getElementById('orientationMode').textContent = isLandscape ? 'Landscape (Horizontal)' : 'Portrait (Vertical)';
+    }
+
+    window.addEventListener('resize', updateMetrics);
+    window.addEventListener('scroll', updateMetrics);
+    updateMetrics();
+  </script>
+</body>
+</html>

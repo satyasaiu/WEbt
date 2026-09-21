@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Experiment 07: Dynamic Elements | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .node-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .node-item:hover {
+      border-color: var(--accent-cyan);
+      transform: translateX(4px);
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#dom">DOM Manipulation</a>
+        <span>/</span>
+        <span>Dynamic Elements</span>
+      </div>
+      <div class="meta-pill">Experiment 07 • DOM Manipulation</div>
+      <h1 class="program-title">Dynamic Element Creation & Removal</h1>
+      <p class="program-desc">
+        Creating, configuring, inserting, cloning, and removing DOM element nodes programmatically using document.createElement(), appendChild(), insertBefore(), and element.remove().
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box">
+        <!-- Control Action Bar -->
+        <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+          <button onclick="appendNewNode()" class="glass-btn glass-btn-primary glass-btn-sm">
+            Append New Node (appendChild)
+          </button>
+          <button onclick="insertAtBeginning()" class="glass-btn glass-btn-accent glass-btn-sm">
+            Prepend at Start (insertBefore)
+          </button>
+          <button onclick="cloneFirstNode()" class="glass-btn glass-btn-sm">
+            Clone First Node (cloneNode)
+          </button>
+          <button onclick="removeLastNode()" class="glass-btn glass-btn-sm" style="background: rgba(251, 113, 133, 0.15);">
+            Remove Last Node (remove)
+          </button>
+        </div>
+
+        <!-- Node Container -->
+        <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--glass-border); padding: 1.25rem; border-radius: var(--radius-md); min-height: 160px;">
+          <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.75rem;">
+            DOM Node Container (#nodeContainer) — <span id="nodeCountBadge" style="color:var(--accent-cyan)">2 Nodes</span>
+          </div>
+          <div id="nodeContainer">
+            <div class="node-item">
+              <span><strong>Node #1</strong>: Initial Root Node</span>
+              <button onclick="this.parentElement.remove(); updateCount();" class="glass-btn glass-btn-sm" style="padding:0.2rem 0.5rem; color:var(--accent-pink);">Remove ✕</button>
+            </div>
+            <div class="node-item">
+              <span><strong>Node #2</strong>: Initial Sibling Node</span>
+              <button onclick="this.parentElement.remove(); updateCount();" class="glass-btn glass-btn-sm" style="padding:0.2rem 0.5rem; color:var(--accent-pink);">Remove ✕</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-box" id="nodeCodeSnippet" style="margin-top: 1.25rem;">
+// Output: Click a button above to observe DOM tree manipulation
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>createElement:</strong> Creates a detached HTML element in memory (<code>const el = document.createElement('div')</code>). It does not appear in the page until appended.</li>
+        <li><strong>appendChild:</strong> Adds the element as the last child of the specified parent container.</li>
+        <li><strong>insertBefore:</strong> <code>parent.insertBefore(newNode, referenceNode)</code> inserts the new element directly before the reference sibling.</li>
+        <li><strong>cloneNode(deep):</strong> Passing <code>true</code> clones the element along with all of its child nodes and inner content.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="element-selection-text.html" class="glass-btn">← Prev: Element Selection</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="class-style-manipulation.html" class="glass-btn glass-btn-primary">Next: Class & Style Manipulation →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Experiment 07</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    let nodeIndex = 2;
+
+    function updateCount() {
+      const count = document.querySelectorAll('#nodeContainer .node-item').length;
+      document.getElementById('nodeCountBadge').textContent = `${count} Node${count === 1 ? '' : 's'}`;
+    }
+
+    function createNode(title) {
+      nodeIndex++;
+      const div = document.createElement('div');
+      div.className = 'node-item';
+      div.innerHTML = `
+        <span><strong>Node #${nodeIndex}</strong>: ${title}</span>
+        <button onclick="this.parentElement.remove(); updateCount();" class="glass-btn glass-btn-sm" style="padding:0.2rem 0.5rem; color:var(--accent-pink);">Remove ✕</button>
+      `;
+      return div;
+    }
+
+    function appendNewNode() {
+      const container = document.getElementById('nodeContainer');
+      const node = createNode('Appended to End');
+      container.appendChild(node);
+      updateCount();
+      document.getElementById('nodeCodeSnippet').textContent = `const node = document.createElement('div');\nnode.className = 'node-item';\ncontainer.appendChild(node);`;
+      showToast('Node appended with appendChild()', 'success');
+    }
+
+    function insertAtBeginning() {
+      const container = document.getElementById('nodeContainer');
+      const node = createNode('Prepended to Start');
+      if (container.firstChild) {
+        container.insertBefore(node, container.firstChild);
+      } else {
+        container.appendChild(node);
+      }
+      updateCount();
+      document.getElementById('nodeCodeSnippet').textContent = `container.insertBefore(newNode, container.firstChild);`;
+      showToast('Node prepended with insertBefore()', 'info');
+    }
+
+    function cloneFirstNode() {
+      const first = document.querySelector('#nodeContainer .node-item');
+      if (!first) {
+        showToast('No node to clone', 'warning');
+        return;
+      }
+      const clone = first.cloneNode(true);
+      document.getElementById('nodeContainer').appendChild(clone);
+      updateCount();
+      document.getElementById('nodeCodeSnippet').textContent = `const clone = firstElement.cloneNode(true);\ncontainer.appendChild(clone);`;
+      showToast('First node cloned deep with cloneNode(true)', 'success');
+    }
+
+    function removeLastNode() {
+      const container = document.getElementById('nodeContainer');
+      if (container.lastElementChild) {
+        container.lastElementChild.remove();
+        updateCount();
+        document.getElementById('nodeCodeSnippet').textContent = `container.lastElementChild.remove();`;
+        showToast('Last node removed from DOM', 'warning');
+      } else {
+        showToast('No nodes to remove', 'warning');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Mini Project 03: Stopwatch & Laps | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .stopwatch-unit {
+      max-width: 520px;
+      margin: 0 auto;
+      text-align: center;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--glass-border);
+      border-radius: 28px;
+      padding: 2.5rem 2rem;
+      backdrop-filter: blur(25px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .sw-display {
+      font-size: clamp(2.6rem, 7vw, 4.2rem);
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: #fff;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 25px rgba(56, 189, 248, 0.35);
+    }
+    .sw-millis {
+      font-size: 0.55em;
+      color: var(--accent-cyan);
+    }
+    .laps-container {
+      margin-top: 2rem;
+      max-height: 200px;
+      overflow-y: auto;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+    }
+    .lap-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+    }
+    .lap-row:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#mini-projects">Mini Projects</a>
+        <span>/</span>
+        <span>Stopwatch</span>
+      </div>
+      <div class="meta-pill">Experiment 03 • JavaScript Mini Project</div>
+      <h1 class="program-title">Precision Stopwatch with Lap Timing</h1>
+      <p class="program-desc">
+        A millisecond-accurate stopwatch supporting Start, Pause, Resume, Reset, and dynamic lap time recording with delta lap comparisons.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box" style="padding: 2.5rem 1rem;">
+        <div class="stopwatch-unit">
+          <div class="sw-display">
+            <span id="swMinutes">00</span>:<span id="swSeconds">00</span>.<span id="swMillis" class="sw-millis">00</span>
+          </div>
+
+          <!-- Controls -->
+          <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+            <button onclick="startStopwatch()" id="startBtn" class="glass-btn glass-btn-primary">Start ▶</button>
+            <button onclick="pauseStopwatch()" id="pauseBtn" class="glass-btn" disabled>Pause ⏸</button>
+            <button onclick="recordLap()" id="lapBtn" class="glass-btn glass-btn-accent" disabled>Record Lap 🏁</button>
+            <button onclick="resetStopwatch()" id="resetBtn" class="glass-btn" style="background: rgba(251, 113, 133, 0.15); border-color: rgba(251, 113, 133, 0.3);">Reset ↺</button>
+          </div>
+
+          <!-- Recorded Laps Table -->
+          <div id="lapsContainer" class="laps-container" style="display: none;">
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem; text-align: left; padding-left: 0.5rem;">
+              Recorded Laps
+            </div>
+            <div id="lapsList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Elapsed Delta Time:</strong> Relies on <code>performance.now()</code> or delta calculations between <code>Date.now()</code> and the initial start timestamp to prevent cumulative timer drift.</li>
+        <li><strong>High Frequency Tick:</strong> Runs on a 10ms interval (<code>setInterval(tick, 10)</code>) to update centisecond/millisecond digits with precision.</li>
+        <li><strong>Dynamic Lap Array:</strong> Pushes current timestamp snapshots into a JavaScript array and prepends styled HTML nodes to the lap roster DOM element.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="digital-clock.html" class="glass-btn">← Prev: Digital Clock</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="countdown-timer.html" class="glass-btn glass-btn-primary">Next: Countdown Timer →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Mini Project 03</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval = null;
+    let lapCount = 0;
+
+    function formatTime(ms) {
+      const minutes = Math.floor(ms / 60000);
+      const seconds = Math.floor((ms % 60000) / 1000);
+      const centis = Math.floor((ms % 1000) / 10);
+      return {
+        m: String(minutes).padStart(2, '0'),
+        s: String(seconds).padStart(2, '0'),
+        c: String(centis).padStart(2, '0'),
+        raw: `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(centis).padStart(2, '0')}`
+      };
+    }
+
+    function renderStopwatch() {
+      const t = formatTime(elapsedTime);
+      document.getElementById('swMinutes').textContent = t.m;
+      document.getElementById('swSeconds').textContent = t.s;
+      document.getElementById('swMillis').textContent = t.c;
+    }
+
+    function startStopwatch() {
+      if (!timerInterval) {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(() => {
+          elapsedTime = Date.now() - startTime;
+          renderStopwatch();
+        }, 10);
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('pauseBtn').disabled = false;
+        document.getElementById('lapBtn').disabled = false;
+        showToast('Stopwatch started', 'success');
+      }
+    }
+
+    function pauseStopwatch() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        document.getElementById('startBtn').disabled = false;
+        document.getElementById('pauseBtn').disabled = true;
+        showToast('Stopwatch paused', 'info');
+      }
+    }
+
+    function recordLap() {
+      lapCount++;
+      const lapsContainer = document.getElementById('lapsContainer');
+      const lapsList = document.getElementById('lapsList');
+      lapsContainer.style.display = 'block';
+
+      const t = formatTime(elapsedTime);
+      const lapItem = document.createElement('div');
+      lapItem.className = 'lap-row';
+      lapItem.innerHTML = `
+        <span style="color:var(--accent-cyan)">Lap ${String(lapCount).padStart(2, '0')}</span>
+        <span style="color:#fff">${t.raw}</span>
+      `;
+      lapsList.prepend(lapItem);
+      showToast(`Lap ${lapCount} recorded: ${t.raw}`, 'info');
+    }
+
+    function resetStopwatch() {
+      pauseStopwatch();
+      elapsedTime = 0;
+      lapCount = 0;
+      renderStopwatch();
+      document.getElementById('lapsList').innerHTML = '';
+      document.getElementById('lapsContainer').style.display = 'none';
+      document.getElementById('lapBtn').disabled = true;
+      document.getElementById('startBtn').disabled = false;
+      showToast('Stopwatch reset', 'warning');
+    }
+  </script>
+</body>
+</html>

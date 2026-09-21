@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Experiment 21: Dialogs & Timing API | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .dialog-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .dialog-modal-card {
+      background: #0f172a;
+      border: 1px solid var(--accent-cyan);
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 440px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#browser">Browser Features</a>
+        <span>/</span>
+        <span>Dialogs & Timing</span>
+      </div>
+      <div class="meta-pill">Experiment 21 • BOM & Asynchronous Timers</div>
+      <h1 class="program-title">Browser Dialogs & Timing API</h1>
+      <p class="program-desc">
+        Comparing native blocking modal dialogs (alert, confirm, prompt) against asynchronous timers (setTimeout, setInterval, clearTimeout, clearInterval) and non-blocking glass dialogs.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+          <!-- 1. Browser Dialog Methods -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: var(--radius-md);">
+            <div style="font-weight: 700; color: var(--accent-cyan); margin-bottom: 0.75rem;">
+              1. Modal Dialog Triggers:
+            </div>
+            <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1rem;">
+              Trigger browser window dialogs and inspect user return responses:
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+              <button onclick="triggerAlert()" class="glass-btn glass-btn-sm" style="justify-content: flex-start;">
+                📢 window.alert() Dialog
+              </button>
+              <button onclick="triggerConfirm()" class="glass-btn glass-btn-sm" style="justify-content: flex-start;">
+                ❓ window.confirm() Dialog (OK / Cancel)
+              </button>
+              <button onclick="triggerPrompt()" class="glass-btn glass-btn-sm" style="justify-content: flex-start;">
+                ✏️ window.prompt() Dialog (User String Input)
+              </button>
+              <button onclick="triggerGlassModal()" class="glass-btn glass-btn-accent glass-btn-sm" style="justify-content: flex-start;">
+                💎 Modern Non-Blocking Glass Modal
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Asynchronous Timers -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+              <div style="font-weight: 700; color: var(--accent-purple); margin-bottom: 0.75rem;">
+                2. Asynchronous Timing Ticker:
+              </div>
+              <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 1rem;">
+                Live interval ticker incrementing via <code>setInterval()</code>:
+              </p>
+              <div style="font-size: 3rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-cyan); text-align: center; margin: 1rem 0;">
+                <span id="tickerDisplay">0</span>s
+              </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem; justify-content: center;">
+              <button onclick="startTicker()" id="tickerStartBtn" class="glass-btn glass-btn-primary glass-btn-sm">Start Interval</button>
+              <button onclick="stopTicker()" id="tickerStopBtn" class="glass-btn glass-btn-sm" disabled>Clear Interval</button>
+              <button onclick="delayedToastTrigger()" class="glass-btn glass-btn-sm">setTimeout (2s Delay)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-box" id="dialogLogBox" style="margin-top: 1.25rem;">
+// Output: Click any dialog trigger above to test interaction results
+        </div>
+      </div>
+    </section>
+
+    <!-- Modern Non-Blocking Glass Modal -->
+    <div id="customGlassModal" class="dialog-modal">
+      <div class="dialog-modal-card">
+        <h3 style="color: var(--accent-cyan); margin-bottom: 0.5rem; font-size: 1.3rem;">Glassmorphic Non-Blocking Modal</h3>
+        <p style="color: var(--text-secondary); font-size: 0.92rem; line-height: 1.6; margin-bottom: 1.5rem;">
+          Unlike native <code>alert()</code>, this custom dialog does not freeze the JavaScript event loop or block background timer executions.
+        </p>
+        <button onclick="closeGlassModal()" class="glass-btn glass-btn-primary" style="width: 100%;">
+          Acknowledge & Close Dialog
+        </button>
+      </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Blocking vs Non-Blocking:</strong> Native dialogs (<code>alert</code>, <code>confirm</code>, <code>prompt</code>) are synchronous and freeze the browser execution thread until dismissed. Modern web applications favor custom non-blocking DOM modal dialogs.</li>
+        <li><strong>Event Loop & Timers:</strong> <code>setTimeout(fn, ms)</code> places the callback into the Web API task queue to run once after the specified delay. <code>setInterval(fn, ms)</code> runs recurrently until <code>clearInterval(id)</code> is invoked.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="navigator-device-detection.html" class="glass-btn">← Prev: Navigator Detection</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="../storage/localstorage-crud.html" class="glass-btn glass-btn-primary">Next: LocalStorage CRUD →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Experiment 21</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    let tickerCount = 0;
+    let tickerTimer = null;
+
+    function triggerAlert() {
+      alert("Academic Practical Alert: This is a synchronous modal message for Yogendra (CDS/2025/1554).");
+      document.getElementById('dialogLogBox').textContent = `window.alert('...'); // Dismissed by user`;
+      showToast('Alert dialog was acknowledged', 'info');
+    }
+
+    function triggerConfirm() {
+      const response = confirm("Do you wish to verify and approve the practical submission?");
+      document.getElementById('dialogLogBox').textContent = `const isConfirmed = window.confirm('...'); // User returned: ${response}`;
+      showToast(response ? 'User clicked OK (true)' : 'User clicked Cancel (false)', response ? 'success' : 'warning');
+    }
+
+    function triggerPrompt() {
+      const userText = prompt("Enter your laboratory section number:", "5");
+      document.getElementById('dialogLogBox').textContent = `const input = window.prompt('...'); // User entered: ${JSON.stringify(userText)}`;
+      showToast(`Prompt response received: ${userText}`, 'info');
+    }
+
+    function triggerGlassModal() {
+      document.getElementById('customGlassModal').style.display = 'flex';
+      document.getElementById('dialogLogBox').textContent = `// Custom non-blocking glass dialog displayed`;
+    }
+
+    function closeGlassModal() {
+      document.getElementById('customGlassModal').style.display = 'none';
+      showToast('Custom glass modal closed', 'info');
+    }
+
+    function startTicker() {
+      if (!tickerTimer) {
+        tickerTimer = setInterval(() => {
+          tickerCount++;
+          document.getElementById('tickerDisplay').textContent = tickerCount;
+        }, 1000);
+        document.getElementById('tickerStartBtn').disabled = true;
+        document.getElementById('tickerStopBtn').disabled = false;
+        showToast('setInterval() ticker started', 'success');
+      }
+    }
+
+    function stopTicker() {
+      if (tickerTimer) {
+        clearInterval(tickerTimer);
+        tickerTimer = null;
+        document.getElementById('tickerStartBtn').disabled = false;
+        document.getElementById('tickerStopBtn').disabled = true;
+        showToast('clearInterval() executed — ticker stopped', 'warning');
+      }
+    }
+
+    function delayedToastTrigger() {
+      showToast('setTimeout(2000ms) initiated. Waiting...', 'info');
+      setTimeout(() => {
+        showToast('⏰ setTimeout triggered! Executed 2000ms later asynchronously.', 'success');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

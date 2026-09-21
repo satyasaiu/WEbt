@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Experiment 16: Multi-Step Survey Form | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .step-indicator {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .step-indicator::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--glass-border);
+      z-index: 0;
+      transform: translateY(-50%);
+    }
+    .step-node {
+      position: relative;
+      z-index: 1;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 2px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+    }
+    .step-node.active {
+      border-color: var(--accent-cyan);
+      color: #fff;
+      background: rgba(56, 189, 248, 0.2);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+    }
+    .step-node.completed {
+      background: var(--accent-emerald);
+      border-color: var(--accent-emerald);
+      color: #070a16;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#forms">Forms & Validation</a>
+        <span>/</span>
+        <span>Multi-Step Survey</span>
+      </div>
+      <div class="meta-pill">Experiment 16 • Multi-Step Form Logic</div>
+      <h1 class="program-title">Multi-Step Survey Form with Validation</h1>
+      <p class="program-desc">
+        Implementing a multi-step student evaluation survey with per-step field validation gates, interactive state retention, progress tracking, and a final review confirmation modal.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box" style="max-width: 650px; margin: 0 auto;">
+        <!-- Step Progress Indicator -->
+        <div class="step-indicator">
+          <div id="stepDot1" class="step-node active">1</div>
+          <div id="stepDot2" class="step-node">2</div>
+          <div id="stepDot3" class="step-node">3</div>
+        </div>
+
+        <form id="surveyMultiForm" onsubmit="submitSurvey(event)">
+          <!-- STEP 1: Student Information -->
+          <div id="stepPane1">
+            <h3 style="color: var(--accent-cyan); margin-bottom: 1rem;">Step 1: Student Credentials</h3>
+            <div style="margin-bottom: 1.25rem;">
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+                Student Name *
+              </label>
+              <input type="text" id="surveyName" class="glass-input" value="Yogendra" required>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+                Registration Number *
+              </label>
+              <input type="text" id="surveyReg" class="glass-input" value="CDS/2025/1554" required>
+            </div>
+            <button type="button" onclick="goToStep(2)" class="glass-btn glass-btn-primary" style="width: 100%;">
+              Continue to Step 2 →
+            </button>
+          </div>
+
+          <!-- STEP 2: Academic Evaluation -->
+          <div id="stepPane2" style="display: none;">
+            <h3 style="color: var(--accent-purple); margin-bottom: 1rem;">Step 2: Course Assessment</h3>
+            <div style="margin-bottom: 1.25rem;">
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+                Rate the Practical Curriculum Quality:
+              </label>
+              <select id="surveyRating" class="glass-select">
+                <option value="5">⭐⭐⭐⭐⭐ 5 - Outstanding & Hands-On</option>
+                <option value="4">⭐⭐⭐⭐ 4 - Very Good</option>
+                <option value="3">⭐⭐⭐ 3 - Satisfactory</option>
+              </select>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+              <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+                Favorite Module:
+              </label>
+              <label style="display: block; margin-bottom: 0.4rem; cursor: pointer;">
+                <input type="radio" name="favModule" value="HTML5 Semantics"> HTML5 Semantics & Structure
+              </label>
+              <label style="display: block; margin-bottom: 0.4rem; cursor: pointer;">
+                <input type="radio" name="favModule" value="CSS3 Glassmorphism" checked> CSS3 Glassmorphism & Layouts
+              </label>
+              <label style="display: block; cursor: pointer;">
+                <input type="radio" name="favModule" value="JavaScript Mini Projects"> JavaScript Mini Projects & DOM
+              </label>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+              <button type="button" onclick="goToStep(1)" class="glass-btn">← Back</button>
+              <button type="button" onclick="goToStep(3)" class="glass-btn glass-btn-primary" style="flex: 1;">Continue to Review →</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Review & Confirmation -->
+          <div id="stepPane3" style="display: none;">
+            <h3 style="color: var(--accent-emerald); margin-bottom: 1rem;">Step 3: Review & Final Submit</h3>
+            <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-size: 0.92rem; line-height: 1.8;">
+              <div><strong>Student Name:</strong> <span id="revName"></span></div>
+              <div><strong>Registration:</strong> <span id="revReg"></span></div>
+              <div><strong>Quality Rating:</strong> <span id="revRating"></span></div>
+              <div><strong>Favorite Module:</strong> <span id="revFav"></span></div>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+              <button type="button" onclick="goToStep(2)" class="glass-btn">← Back</button>
+              <button type="submit" class="glass-btn glass-btn-primary" style="flex: 1;">Submit Practical Survey ✓</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Step Validation Gates:</strong> Before transitioning step panes, current inputs are checked via <code>reportValidity()</code> or custom validations, preventing skipping required inputs.</li>
+        <li><strong>Form State Encapsulation:</strong> Preserves intermediate selections in memory across forward and backward step transitions without resetting prior fields.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="credit-card-validator.html" class="glass-btn">← Prev: Card Validator</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="instant-feedback-form.html" class="glass-btn glass-btn-primary">Next: Instant Feedback Form →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Experiment 16</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    let currentStep = 1;
+
+    function goToStep(step) {
+      if (step === 2) {
+        const name = document.getElementById('surveyName').value.trim();
+        const reg = document.getElementById('surveyReg').value.trim();
+        if (!name || !reg) {
+          showToast('Please fill in student name and registration number', 'error');
+          return;
+        }
+      }
+
+      if (step === 3) {
+        document.getElementById('revName').textContent = document.getElementById('surveyName').value;
+        document.getElementById('revReg').textContent = document.getElementById('surveyReg').value;
+        document.getElementById('revRating').textContent = document.getElementById('surveyRating').options[document.getElementById('surveyRating').selectedIndex].text;
+        const fav = document.querySelector('input[name="favModule"]:checked')?.value || 'None';
+        document.getElementById('revFav').textContent = fav;
+      }
+
+      currentStep = step;
+      document.getElementById('stepPane1').style.display = step === 1 ? 'block' : 'none';
+      document.getElementById('stepPane2').style.display = step === 2 ? 'block' : 'none';
+      document.getElementById('stepPane3').style.display = step === 3 ? 'block' : 'none';
+
+      // Update dots
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById(`stepDot${i}`);
+        dot.className = 'step-node' + (i === step ? ' active' : (i < step ? ' completed' : ''));
+      }
+      showToast(`Navigated to Step ${step}`, 'info');
+    }
+
+    function submitSurvey(e) {
+      e.preventDefault();
+      showToast('🎉 Survey submitted successfully! Thank you for the evaluation.', 'success');
+      setTimeout(() => goToStep(1), 2000);
+    }
+  </script>
+</body>
+</html>

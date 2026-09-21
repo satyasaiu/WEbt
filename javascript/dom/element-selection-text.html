@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Experiment 06: DOM Element Selection | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#dom">DOM Manipulation</a>
+        <span>/</span>
+        <span>Element Selection</span>
+      </div>
+      <div class="meta-pill">Experiment 06 • DOM Manipulation</div>
+      <h1 class="program-title">Element Selection & Content Updates</h1>
+      <p class="program-desc">
+        Comparing modern DOM query selectors (getElementById, querySelector, querySelectorAll) and demonstrating safe content updates via textContent vs innerHTML.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box">
+        <!-- Target Elements Card -->
+        <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--glass-border); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+          <h3 id="targetHeader" style="color: #fff; margin-bottom: 0.5rem; font-size: 1.4rem;">
+            Default Header: Document Object Model
+          </h3>
+          <p class="info-paragraph" style="color: var(--text-secondary); line-height: 1.6;">
+            Paragraph 1 (class: <code>.info-paragraph</code>): The DOM represents documents as a logical tree of objects.
+          </p>
+          <p class="info-paragraph" style="color: var(--text-secondary); line-height: 1.6; margin-top: 0.5rem;">
+            Paragraph 2 (class: <code>.info-paragraph</code>): Scripts can dynamically query nodes and modify their contents.
+          </p>
+          <div id="dynamicContainer" style="margin-top: 1rem; padding: 0.75rem; border: 1px dashed var(--glass-border); border-radius: 8px; font-size: 0.9rem; color: var(--accent-cyan);">
+            Container (#dynamicContainer): Ready for content injection...
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+          <button onclick="changeById()" class="glass-btn glass-btn-primary glass-btn-sm">
+            Modify via getElementById()
+          </button>
+          <button onclick="changeByQuerySelector()" class="glass-btn glass-btn-sm">
+            Modify via querySelector('.info-paragraph')
+          </button>
+          <button onclick="highlightAllQuery()" class="glass-btn glass-btn-accent glass-btn-sm">
+            Batch Update via querySelectorAll()
+          </button>
+          <button onclick="injectInnerHTML()" class="glass-btn glass-btn-sm">
+            Inject HTML via innerHTML
+          </button>
+          <button onclick="resetDOMDemo()" class="glass-btn glass-btn-sm" style="background: rgba(251, 113, 133, 0.15);">
+            Reset DOM State
+          </button>
+        </div>
+
+        <div class="code-box" id="domCodeLog" style="margin-top: 1.25rem;">
+// Output log: Select an action above to execute DOM manipulation methods
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>getElementById vs querySelector:</strong> <code>getElementById</code> offers fastest lookups for ID tokens. <code>querySelector</code> uses CSS selector syntax, matching the first occurrence of any arbitrary selector.</li>
+        <li><strong>NodeList Iteration:</strong> <code>querySelectorAll</code> returns a static <code>NodeList</code> which can be iterated using <code>forEach()</code>.</li>
+        <li><strong>textContent vs innerHTML:</strong> Use <code>textContent</code> for plain strings to prevent Cross-Site Scripting (XSS). Use <code>innerHTML</code> only when purposely rendering HTML element tags.</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="../mini-projects/todo-list.html" class="glass-btn">← Prev: To-Do App</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="dynamic-element-creation.html" class="glass-btn glass-btn-primary">Next: Dynamic Elements →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Experiment 06</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    function logCode(code) {
+      document.getElementById('domCodeLog').textContent = code;
+    }
+
+    function changeById() {
+      const header = document.getElementById('targetHeader');
+      header.textContent = 'Updated via document.getElementById("targetHeader")!';
+      header.style.color = 'var(--accent-cyan)';
+      logCode(`const el = document.getElementById('targetHeader');\nel.textContent = 'Updated via document.getElementById("targetHeader")!';\nel.style.color = '#22d3ee';`);
+      showToast('Header modified via getElementById', 'success');
+    }
+
+    function changeByQuerySelector() {
+      const p = document.querySelector('.info-paragraph');
+      p.textContent = 'First paragraph matched & modified via document.querySelector(".info-paragraph")!';
+      p.style.color = 'var(--accent-purple)';
+      logCode(`const p = document.querySelector('.info-paragraph');\np.textContent = 'First paragraph matched & modified...';`);
+      showToast('First paragraph modified via querySelector', 'info');
+    }
+
+    function highlightAllQuery() {
+      const list = document.querySelectorAll('.info-paragraph');
+      list.forEach((el, idx) => {
+        el.style.background = 'rgba(56, 189, 248, 0.15)';
+        el.style.borderLeft = '3px solid var(--accent-cyan)';
+        el.style.paddingLeft = '0.5rem';
+        el.textContent = `[Node ${idx + 1} Batch Updated via querySelectorAll()] ${el.textContent}`;
+      });
+      logCode(`document.querySelectorAll('.info-paragraph').forEach((el, idx) => {\n  el.style.background = 'rgba(56, 189, 248, 0.15)';\n});`);
+      showToast(`Updated ${list.length} elements via querySelectorAll`, 'info');
+    }
+
+    function injectInnerHTML() {
+      const container = document.getElementById('dynamicContainer');
+      container.innerHTML = `
+        <strong>Injected HTML:</strong>
+        <span class="badge badge-green" style="margin-left:0.5rem;">Rendered Tag</span>
+        <em>Parsed as HTML elements rather than raw plain text.</em>
+      `;
+      logCode(`document.getElementById('dynamicContainer').innerHTML = '<strong>Injected HTML:</strong> ...';`);
+      showToast('Injected structured markup via innerHTML', 'success');
+    }
+
+    function resetDOMDemo() {
+      document.getElementById('targetHeader').textContent = 'Default Header: Document Object Model';
+      document.getElementById('targetHeader').style.color = '#fff';
+      const paras = document.querySelectorAll('.info-paragraph');
+      paras[0].textContent = 'Paragraph 1 (class: .info-paragraph): The DOM represents documents as a logical tree of objects.';
+      paras[1].textContent = 'Paragraph 2 (class: .info-paragraph): Scripts can dynamically query nodes and modify their contents.';
+      paras.forEach(el => {
+        el.style.background = 'transparent';
+        el.style.borderLeft = 'none';
+        el.style.paddingLeft = '0';
+        el.style.color = 'var(--text-secondary)';
+      });
+      document.getElementById('dynamicContainer').textContent = 'Container (#dynamicContainer): Ready for content injection...';
+      logCode('// State reset to original markup');
+      showToast('DOM state restored', 'warning');
+    }
+  </script>
+</body>
+</html>

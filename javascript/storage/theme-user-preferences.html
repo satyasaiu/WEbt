@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Experiment 24: User Preferences | Yogendra</title>
+  <link rel="stylesheet" href="../../assets/css/style.css">
+  <style>
+    .pref-preview-card {
+      padding: 2rem;
+      border-radius: var(--radius-md);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      transition: all 0.3s ease;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-background">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+  </div>
+
+  <nav class="glass-nav">
+    <a href="../../index.html" class="nav-brand">
+      <div class="brand-icon">{ }</div>
+      <span>WebLab</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="../../index.html" class="nav-link">Home</a></li>
+      <li><a href="../../html/index.html" class="nav-link">HTML Programs</a></li>
+      <li><a href="../../css/index.html" class="nav-link">CSS Programs</a></li>
+      <li><a href="../index.html" class="nav-link active">JS Programs</a></li>
+    </ul>
+    <div class="nav-student-badge">Yogendra • CDS/2025/1554</div>
+  </nav>
+
+  <main class="container">
+    <header class="glass-card program-header">
+      <div class="breadcrumb-nav">
+        <a href="../../index.html">Home</a>
+        <span>/</span>
+        <a href="../index.html">JavaScript Programs</a>
+        <span>/</span>
+        <a href="../index.html#storage">Web Storage</a>
+        <span>/</span>
+        <span>User Preferences</span>
+      </div>
+      <div class="meta-pill">Experiment 24 • Client State Persistence</div>
+      <h1 class="program-title">User Preferences & Theme Persistence</h1>
+      <p class="program-desc">
+        Saving user customization preferences (accent glow color, font scale, UI density) persistently into browser localStorage so settings survive across sessions and page reloads.
+      </p>
+    </header>
+
+    <!-- Live Demonstration Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>⚡</span> Live Interactive Demonstration</h2>
+
+      <div class="demo-box">
+        <!-- Live Preview Sandbox -->
+        <div id="prefCard" class="pref-preview-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <h3 id="prefTitle" style="color: var(--accent-cyan); font-size: 1.5rem;">
+              Customized Preference Sandbox
+            </h3>
+            <span id="prefBadge" class="badge badge-cyan">Accent Theme Active</span>
+          </div>
+          <p id="prefBodyText" style="color: var(--text-secondary); line-height: 1.6;">
+            This component immediately reflects your chosen visual preferences. Changing any setting automatically updates localStorage and updates this document state in real-time.
+          </p>
+        </div>
+
+        <!-- Preference Controls Form -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              Accent Glow Palette:
+            </label>
+            <select id="prefAccentSelect" class="glass-select" onchange="updatePref('accent', this.value)">
+              <option value="#22d3ee">Electric Cyan (#22d3ee)</option>
+              <option value="#a855f7">Neon Violet (#a855f7)</option>
+              <option value="#34d399">Emerald Green (#34d399)</option>
+              <option value="#fb7185">Rose Pink (#fb7185)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              Font Scaling:
+            </label>
+            <select id="prefFontSelect" class="glass-select" onchange="updatePref('fontSize', this.value)">
+              <option value="14px">Compact (14px)</option>
+              <option value="16px" selected>Normal (16px)</option>
+              <option value="18px">Enlarged (18px)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.35rem;">
+              Card Padding Density:
+            </label>
+            <select id="prefDensitySelect" class="glass-select" onchange="updatePref('density', this.value)">
+              <option value="1rem">Dense (1rem)</option>
+              <option value="2rem" selected>Comfortable (2rem)</option>
+              <option value="3rem">Spacious (3rem)</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+          <button onclick="location.reload()" class="glass-btn glass-btn-primary glass-btn-sm">
+            Reload Page to Verify Persistence 🔄
+          </button>
+          <button onclick="resetPreferences()" class="glass-btn glass-btn-sm" style="background: rgba(251, 113, 133, 0.15); color: var(--accent-pink);">
+            Reset to Default Settings
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="glass-card program-section">
+      <h2 class="section-title"><span>📘</span> How It Works & Academic Notes</h2>
+      <ul style="color: var(--text-secondary); padding-left: 1.5rem; line-height: 1.8;">
+        <li><strong>Preference Architecture:</strong> Encapsulates all user choices into a unified JSON object: <code>{ accent: '#22d3ee', fontSize: '16px', density: '2rem' }</code>.</li>
+        <li><strong>Storage Hook:</strong> Checks <code>localStorage.getItem('weblab_user_prefs')</code> on page load (DOMContentLoaded) and applies properties before rendering occurs to prevent flash of unstyled content (FOUC).</li>
+      </ul>
+    </section>
+
+    <!-- Navigation Footer -->
+    <div class="glass-card program-nav-footer">
+      <a href="sessionstorage-notes.html" class="glass-btn">← Prev: SessionStorage Notes</a>
+      <a href="../index.html" class="glass-btn">JS Programs</a>
+      <a href="cart-storage.html" class="glass-btn glass-btn-primary">Next: Shopping Cart Storage →</a>
+    </div>
+  </main>
+
+  <footer class="glass-footer">
+    <div class="container footer-content">
+      <div class="footer-info">
+        <h4>JavaScript Experiment 24</h4>
+        <p>Student: Yogendra • CDS/2025/1554 • Section 5</p>
+      </div>
+      <div>
+        <a href="../index.html" class="glass-btn glass-btn-sm">JS Programs List</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/js/main.js"></script>
+  <script>
+    const defaultPrefs = {
+      accent: '#22d3ee',
+      fontSize: '16px',
+      density: '2rem'
+    };
+
+    function loadPrefs() {
+      let prefs = defaultPrefs;
+      const saved = localStorage.getItem('weblab_user_prefs');
+      if (saved) {
+        try { prefs = JSON.parse(saved); } catch (e) { prefs = defaultPrefs; }
+      }
+
+      document.getElementById('prefAccentSelect').value = prefs.accent;
+      document.getElementById('prefFontSelect').value = prefs.fontSize;
+      document.getElementById('prefDensitySelect').value = prefs.density;
+
+      applyPrefsToDOM(prefs);
+    }
+
+    function applyPrefsToDOM(prefs) {
+      const card = document.getElementById('prefCard');
+      card.style.borderColor = prefs.accent;
+      card.style.boxShadow = `0 0 25px ${prefs.accent}44`;
+      card.style.padding = prefs.density;
+
+      document.getElementById('prefTitle').style.color = prefs.accent;
+      document.getElementById('prefBadge').style.borderColor = prefs.accent;
+      document.getElementById('prefBadge').style.color = prefs.accent;
+      document.getElementById('prefBodyText').style.fontSize = prefs.fontSize;
+    }
+
+    function updatePref(key, val) {
+      let prefs = defaultPrefs;
+      const saved = localStorage.getItem('weblab_user_prefs');
+      if (saved) {
+        try { prefs = JSON.parse(saved); } catch (e) {}
+      }
+      prefs[key] = val;
+      localStorage.setItem('weblab_user_prefs', JSON.stringify(prefs));
+      applyPrefsToDOM(prefs);
+      showToast(`Updated preference [${key}] to ${val}`, 'success');
+    }
+
+    function resetPreferences() {
+      localStorage.removeItem('weblab_user_prefs');
+      loadPrefs();
+      showToast('Preferences restored to default theme', 'warning');
+    }
+
+    loadPrefs();
+  </script>
+</body>
+</html>
